@@ -74,7 +74,7 @@ class AtcComponent extends Component {
 		$this->log('ATC API validation prerequest timestamp', $this->tag);
 		$result = $this->socket->request(array(
 			'method' => 'GET',
-			'uri' => 'https://clientserv.net/ATCMerchants/api/Water?MeterNumber=' . $meterNumber,
+			'uri' => 'https://clientserv.net/SmartWater/api/Water?MeterNumber=' . $meterNumber,
 			'body' => json_encode($payload, true),
 			'header' => array(
 				'Content-Type' => 'application/json',
@@ -96,7 +96,7 @@ class AtcComponent extends Component {
 		$this->log('ATC API purchase prerequest timestamp', $this->tag);
 		$result = $this->socket->request(array(
 			'method' => 'POST',
-			'uri' => 'https://clientserv.net/ATCMerchants/api/Water?MeterNumber=' . $meterNumber . '&Amount=' . ($amount / 100),
+			'uri' => 'https://clientserv.net/SmartWater/api/Water?MeterNumber=' . $meterNumber . '&Amount=' . ($amount / 100),
 			'body' => json_encode($payload, true),
 			'header' => array(
 				'Content-Type' => 'application/json',
