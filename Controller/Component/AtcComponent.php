@@ -87,7 +87,7 @@ class AtcComponent extends Component {
 		return json_decode($result->body, true);
 	}
 
-	public function purchasewater($meterNumber, $amount) {
+	public function purchasewater($meterNumber, $amount, $transaction_id) {
 		$payload = array(
 			'TradeCode' => $this->settings['TradeCode'],
 			'TradePass' => $this->settings['TradePass'],
@@ -96,7 +96,8 @@ class AtcComponent extends Component {
 		$this->log('ATC API purchase prerequest timestamp', $this->tag);
 		$result = $this->socket->request(array(
 			'method' => 'POST',
-			'uri' => 'https://clientserv.net/SmartWater/api/Water?MeterNumber=' . $meterNumber . '&Amount=' . ($amount / 100),
+			'uri' => 'https://clientserv.net/SmartWater/api/Water?MeterNumber=' . $meterNumber . '&Amount=' . ($amount / 100) . '&ClientTranId=' . $transaction_id,
+			// &ClientTranId={ClientTranId}
 			'body' => json_encode($payload, true),
 			'header' => array(
 				'Content-Type' => 'application/json',
