@@ -25,7 +25,6 @@ class AtcComponent extends Component {
 			'TradePass' => $this->settings['TradePass'],
 			'TerminalId' => $this->settings['TerminalId']
 		);
-		// $result = $this->socket->post('https://clientserv.net/ATCMerchants/api/Elec?MeterNumber=' . $meterNumber . '&Amount=' . ($amount / 100), json_encode($payload, true), $request);
 		$this->log('ATC API purchase prerequest timestamp', $this->tag);
 		$result = $this->socket->request(array(
 			'method' => 'POST',
@@ -48,7 +47,6 @@ class AtcComponent extends Component {
 			'TradePass' => $this->settings['TradePass'],
 			'TerminalId' => $this->settings['TerminalId']
 		);
-		// $result = $this->socket->post('https://clientserv.net/ATCMerchants/api/Elec?MeterNumber=' . $meterNumber, json_encode($payload, true), $request);
 		$this->log('ATC API validation prerequest timestamp', $this->tag);
 		$result = $this->socket->request(array(
 			'method' => 'GET',
