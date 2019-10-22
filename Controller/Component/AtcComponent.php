@@ -15,7 +15,8 @@ class AtcComponent extends Component {
 		$this->socket = new HttpSocket(array(
 			'ssl_verify_peer' => false,
 			'ssl_verify_host' => false,
-			'ssl_verify_peer' => false
+			'ssl_verify_peer' => false,
+			'timeout' => 60
 		));
 	}
 
