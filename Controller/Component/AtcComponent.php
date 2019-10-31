@@ -14,9 +14,10 @@ class AtcComponent extends Component {
 		$this->settings = array_merge($this->settings, $settings);
 		$this->socket = new HttpSocket(array(
 			'ssl_verify_peer' => false,
-			'ssl_verify_host' => false,
-			'ssl_verify_peer' => false,
-			'timeout' => 60
+			'ssl_verify_peer_name' => false,
+			'ssl_allow_self_signed' => true,
+			'ssl_verify_depth' => 0,
+			'timeout' => 30
 		));
 	}
 
@@ -33,7 +34,7 @@ class AtcComponent extends Component {
 			'body' => json_encode($payload, true),
 			'header' => array(
 				'Content-Type' => 'application/json',
-				'Connection' => 'keep-alive',
+				'Connection' => 'close',
 				'Cache-Control' => 'no-cache'
 			)
 		));
@@ -65,20 +66,17 @@ class AtcComponent extends Component {
 	}
 
 	public function validatewater($meterNumber) {
-		$payload = array(
-			'TradeCode' => $this->settings['TradeCode'],
-			'TradePass' => $this->settings['TradePass'],
-			'TerminalId' => $this->settings['TerminalId']
-		);
 		$this->log('ATC API validation prerequest timestamp', $this->tag);
 		$result = $this->socket->request(array(
 			'method' => 'GET',
-			'uri' => 'https://clientserv.net/SmartWater/api/Water?MeterNumber=' . $meterNumber,
-			'body' => json_encode($payload, true),
+			'uri' => 'https://clientserv.net/SmartWater/api/Waterv2?MeterNumber=' . $meterNumber,
 			'header' => array(
 				'Content-Type' => 'application/json',
-				'Connection' => 'keep-alive',
-				'Cache-Control' => 'no-cache'
+				'Connection' => 'close',
+				'Cache-Control' => 'no-cache',
+				'TradeCode' => $this->settings['TradeCode'],
+				'TradePass' => $this->settings['TradePass'],
+				'TerminalId' => $this->settings['TerminalId']
 			)
 		));
 		$this->log('ATC API validation request: ' . $this->socket->request['raw'], $this->tag);
@@ -87,21 +85,19 @@ class AtcComponent extends Component {
 	}
 
 	public function purchasewater($meterNumber, $amount, $transaction_id) {
-		$payload = array(
-			'TradeCode' => $this->settings['TradeCode'],
-			'TradePass' => $this->settings['TradePass'],
-			'TerminalId' => $this->settings['TerminalId']
-		);
+		$payload = array();
 		$this->log('ATC API purchase prerequest timestamp', $this->tag);
 		$result = $this->socket->request(array(
 			'method' => 'POST',
-			'uri' => 'https://clientserv.net/SmartWater/api/Water?MeterNumber=' . $meterNumber . '&Amount=' . ($amount / 100) . '&ClientTranId=' . $transaction_id,
-			// &ClientTranId={ClientTranId}
+			'uri' => 'https://clientserv.net/SmartWater/api/Waterv2?MeterNumber=' . $meterNumber . '&Amount=' . ($amount / 100) . '&ClientTranId=' . $transaction_id,
 			'body' => json_encode($payload, true),
 			'header' => array(
 				'Content-Type' => 'application/json',
-				'Connection' => 'keep-alive',
-				'Cache-Control' => 'no-cache'
+				'Connection' => 'close',
+				'Cache-Control' => 'no-cache',
+				'TradeCode' => $this->settings['TradeCode'],
+				'TradePass' => $this->settings['TradePass'],
+				'TerminalId' => $this->settings['TerminalId']
 			)
 		));
 		$this->log('ATC API purchase request: ' . $this->socket->request['raw'], $this->tag);
