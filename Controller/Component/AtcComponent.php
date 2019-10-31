@@ -85,7 +85,11 @@ class AtcComponent extends Component {
 	}
 
 	public function purchasewater($meterNumber, $amount, $transaction_id) {
-		$payload = array();
+		$payload = array(
+			'TradeCode' => $this->settings['TradeCode'],
+			'TradePass' => $this->settings['TradePass'],
+			'TerminalId' => $this->settings['TerminalId']
+		);
 		$this->log('ATC API purchase prerequest timestamp', $this->tag);
 		$result = $this->socket->request(array(
 			'method' => 'POST',
@@ -94,10 +98,7 @@ class AtcComponent extends Component {
 			'header' => array(
 				'Content-Type' => 'application/json',
 				'Connection' => 'close',
-				'Cache-Control' => 'no-cache',
-				'TradeCode' => $this->settings['TradeCode'],
-				'TradePass' => $this->settings['TradePass'],
-				'TerminalId' => $this->settings['TerminalId']
+				'Cache-Control' => 'no-cache'
 			)
 		));
 		$this->log('ATC API purchase request: ' . $this->socket->request['raw'], $this->tag);
