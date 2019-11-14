@@ -105,4 +105,26 @@ class AtcComponent extends Component {
 		$this->log('ATC API purchase response (N$' . ($amount / 100) . ' for ' . $meterNumber . '): ' . $result, $this->tag);
 		return json_decode($result->body, true);
 	}
+
+	public function topup($mobileNumber, $amount) {
+		$payload = array(
+			'TradeCode' => $this->settings['TradeCode'],
+			'TradePass' => $this->settings['TradePass'],
+			'TerminalId' => $this->settings['TerminalId']
+		);
+		$this->log('ATC API purchase prerequest timestamp', $this->tag);
+		$result = $this->socket->request(array(
+			'method' => 'POST',
+			'uri' => 'https://clientserv.net/ATCMerchants/api/DirectTopup?mobile=' . $mobileNumber . '&Amount=' . number_format($amount / 115, 2) . '&CallBackUrl=',
+			'body' => json_encode($payload, true),
+			'header' => array(
+				'Content-Type' => 'application/json',
+				'Connection' => 'close',
+				'Cache-Control' => 'no-cache'
+			)
+		));
+		$this->log('ATC DirectTopup request: ' . $this->socket->request['raw'], $this->tag);
+		$this->log('ATC DirectTopup response (N$' . number_format($amount / 115, 2) . ' for ' . $mobileNumber . '): ' . $result, $this->tag);
+		return json_decode($result->body, true);
+	}
 }
