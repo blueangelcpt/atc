@@ -56,7 +56,7 @@ class AtcComponent extends Component {
 			'body' => json_encode($payload, true),
 			'header' => array(
 				'Content-Type' => 'application/json',
-				'Connection' => 'keep-alive',
+				'Connection' => 'close',
 				'Cache-Control' => 'no-cache'
 			)
 		));
