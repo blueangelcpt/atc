@@ -127,4 +127,30 @@ class AtcComponent extends Component {
 		$this->log('ATC DirectTopup response (N$' . number_format($amount / 115, 2) . ' for ' . $mobileNumber . '): ' . $result, $this->tag);
 		return json_decode($result->body, true);
 	}
+
+	public function balance() {
+		$this->socket = new HttpSocket(array(
+			'ssl_verify_peer' => false,
+			'ssl_verify_peer_name' => false,
+			'ssl_allow_self_signed' => true,
+			'ssl_verify_depth' => 0,
+			'timeout' => 30
+		));
+		$payload = array(
+			'TradeCode' => $this->settings['TradeCode'],
+			'TradePass' => $this->settings['TradePass'],
+			'TerminalId' => $this->settings['TerminalId']
+		);
+		$result = $this->socket->request(array(
+			'method' => 'GET',
+			'uri' => 'https://clientserv.net/ATCMerchants/api/Balance',
+			'body' => json_encode($payload, true),
+			'header' => array(
+				'Content-Type' => 'application/json',
+				'Connection' => 'close',
+				'Cache-Control' => 'no-cache'
+			)
+		));
+		return json_decode($result->body, true);
+	}
 }
